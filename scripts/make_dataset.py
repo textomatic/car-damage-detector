@@ -54,9 +54,11 @@ class CarDD_Dataset(Dataset):
             image = self.transform(image)
         
         # Load the target data
-        label = self.image_labels[idx]
-        bbox = self.image_bboxes[idx]
-        segmentation = self.image_segmentations[idx]
+        target = {
+            "label" : self.image_labels[idx],
+            "bbox" : self.image_bboxes[idx],
+            "segmentation" : self.image_segmentations[idx]   
+        }
         
-        # Return the image and label
-        return image, label, bbox, segmentation
+        # Return the image and target
+        return image, target
