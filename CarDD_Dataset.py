@@ -19,10 +19,10 @@ class CarDD_Dataset(Dataset):
             annot_df = json.load(label_data)
             
         # Extract the mapping of intergers to classes
-        self.class_map = {cat["id"] : cat["name"] for cat in annot_df["categories"]}
+        self.class_map = {int(cat["id"]) : cat["name"] for cat in annot_df["categories"]}
         
         # Extract labels, bounding boxes, and pixel segmentation for each image
-        self.image_labels = [image["category_id"]for image in annot_df["annotations"]]
+        self.image_labels = [int(image["category_id"]) for image in annot_df["annotations"]]
         self.image_bboxes = [image["bbox"]for image in annot_df["annotations"]]
         self.image_segmentations = [image["segmentation"]for image in annot_df["annotations"]]
         
