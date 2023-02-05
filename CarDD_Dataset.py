@@ -60,7 +60,3 @@ class CarDD_Dataset(Dataset):
         
         # Return the image and label
         return image, label, bbox, segmentation
-        
-    
-if __name__ == "__main__":
-    x = CarDD_Dataset(data_dir="data/CarDD/train2017", labels_path="data/CarDD/annotations/instances_train2017.json")
