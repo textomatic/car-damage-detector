@@ -3,7 +3,7 @@
 
 1. Change directory to this folder:
 ```bash
-cd car/damage-detection/deeplearning_1
+cd car-damage-detector/deeplearning_1
 ```
 
 2. Create a new Python 3.8 environment in Conda:
