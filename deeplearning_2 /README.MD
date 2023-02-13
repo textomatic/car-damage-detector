@@ -26,14 +26,17 @@ conda install -r requirements.txt
 ```
 
 # DataProcessing 
+```bash
 ├── CarD(Ori_data)
 │         ├── annotations  (json files )   
 │         └── train2017    (TrainImage)
 │         └── test2017     (TestImage)
 │         └── val2017      (ValImage)
+```
 ```bash
 run python dataprocessing.py #Generate YOLOv5dataset 
 ```
+```bash
 ├── CarSeg_Data (YOLOv5 )
 │         ├── images   
 │         │     ├── train (TrainImage)
@@ -41,7 +44,7 @@ run python dataprocessing.py #Generate YOLOv5dataset
 │         └── labels    
 │               ├── train  (TrainTxt)
 │               └── val    (ValTxt)  
-
+```
 
 # Training
 ```bash
