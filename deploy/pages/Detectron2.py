@@ -91,7 +91,7 @@ if __name__ == '__main__':
     logger = setup_logger()
 
     # Download the models if they don't exist locally yet
-    if not os.path.exists(_MODEL_CACHE) or not os.listdir(_MODEL_CACHE):
+    if not os.path.exists(_MODEL_CACHE) or len(os.listdir(_MODEL_CACHE)) != 4:
         with st.spinner('Model(s) not found locally. Downloading from remote...'):
             os.makedirs(_MODEL_CACHE)
             for model in [_MODEL_1, _MODEL_2]:

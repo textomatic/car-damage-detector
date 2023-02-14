@@ -11,7 +11,6 @@ import sys
 _TORCH_VERSION = ".".join(torch.__version__.split(".")[:2])
 _CUDA_VERSION = torch.__version__.split("+")[-1]
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-_PARENT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 _REPO_CACHE = os.path.join(_CURRENT_DIR, 'repo_cache_yolo/yolov5')
 _MODEL_CACHE = os.path.join(_CURRENT_DIR, 'model_cache_yolo')
 _MODEL_NAME = 'yolov5s-seg-best.pt'
