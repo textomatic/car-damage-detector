@@ -1,0 +1,6 @@
+cv2
+numpy
+scikit-learn
+scikit-image
+pillow
+pickle
