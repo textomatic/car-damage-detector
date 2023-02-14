@@ -62,6 +62,6 @@ if __name__ == '__main__':
             subprocess.run([f"{sys.executable}", f"{_REPO_CACHE}/segment/predict.py", "--weights", _MODEL_CACHE + "/" + _MODEL_NAME, "--conf", str(confidence_threshold), "--source", image_file.name, "--project", "yolo_preds","--name", "predictions", "--exist-ok"])
 
         # Display prediction on image
-        pred_loc = _CURRENT_DIR + '/yolo_preds/predictions'
+        pred_loc = _REPO_CACHE + '/yolo_preds/predictions'
         img_result = Image.open(os.path.join(pred_loc, image_file.name))
         st.image(img_result, caption='Processed Image')
