@@ -236,7 +236,7 @@ if __name__ == '__main__':
     
     # Load the model
     print("Loading the model...")
-    model = pickle.load(open('svm_model.pkl', 'rb'))
+    model = pickle.load(open('../models/svm_model.pkl', 'rb'))
     
     # Evaluate the model at different thresholds and calculate the AP for each class
     print("Performing object detection... This may take a long time...")
