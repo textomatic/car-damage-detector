@@ -10,7 +10,9 @@ import sys
 # Define constants
 _TORCH_VERSION = ".".join(torch.__version__.split(".")[:2])
 _CUDA_VERSION = torch.__version__.split("+")[-1]
-_MODEL_CACHE = './model_cache_yolo'
+_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+_REPO_CACHE = os.path.join(_CURRENT_DIR, 'repo_cache_yolo/yolov5')
+_MODEL_CACHE = os.path.join(_CURRENT_DIR, 'model_cache_yolo')
 _MODEL_NAME = 'yolov5s-seg-best.pt'
 _MODEL_WEIGHTS = 'https://duke.box.com/shared/static/dr5nir98p7pbt0bijp6mlfd2rul3g8g7.pt'
 
@@ -28,7 +30,7 @@ if __name__ == '__main__':
             response_weights = requests.get(_MODEL_WEIGHTS, allow_redirects=True)
             open(os.path.join(_MODEL_CACHE, _MODEL_NAME), 'wb').write(response_weights.content)
             # Clone git repo of YOLOv5 for the detection scripts
-            subprocess.call('git clone https://github.com/ultralytics/yolov5.git', shell=True)
+            subprocess.call(f'git clone https://github.com/ultralytics/yolov5.git {_REPO_CACHE}', shell=True)
 
     # Dropdown box to select a model
     model_choice = st.selectbox('Pick a model', [_MODEL_NAME])
@@ -57,8 +59,9 @@ if __name__ == '__main__':
         # Generate prediction on image
         with st.spinner('Performing inference on image...'):
             # Execute detection script to get inference of bounding box and segmentation mask
-            subprocess.run([f"{sys.executable}", "yolov5/segment/predict.py", "--weights", _MODEL_CACHE + "/" + _MODEL_NAME, "--conf", str(confidence_threshold), "--source", image_file.name, "--project", "yolo_preds","--name", "predictions", "--exist-ok"])
+            subprocess.run([f"{sys.executable}", f"{_REPO_CACHE}/segment/predict.py", "--weights", _MODEL_CACHE + "/" + _MODEL_NAME, "--conf", str(confidence_threshold), "--source", image_file.name, "--project", "yolo_preds","--name", "predictions", "--exist-ok"])
 
         # Display prediction on image
-        img_result = Image.open(os.path.join("yolo_preds/predictions", image_file.name))
+        pred_loc = _CURRENT_DIR + '/yolo_preds/predictions'
+        img_result = Image.open(os.path.join(pred_loc, image_file.name))
         st.image(img_result, caption='Processed Image')
