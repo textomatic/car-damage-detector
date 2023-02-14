@@ -64,6 +64,6 @@ if __name__ == '__main__':
 
         # Display prediction on image
         #pred_loc = _PARENT_DIR + '/yolo_preds/predictions'
-        pred_loc = os.path.join(_REPO_CACHE + '/runs/predict-seg', image_file.name)
+        pred_loc = os.path.join(_REPO_CACHE + '/runs/predict-seg/exp', image_file.name)
         img_result = Image.open(pred_loc)
         st.image(img_result, caption='Processed Image')
