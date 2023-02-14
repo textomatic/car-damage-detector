@@ -15,7 +15,8 @@ from detectron2.utils.logger import setup_logger
 _TORCH_VERSION = ".".join(torch.__version__.split(".")[:2])
 _CUDA_VERSION = torch.__version__.split("+")[-1]
 _DETECTRON_VERSION = detectron2.__version__
-_MODEL_CACHE = './model_cache_detectron'
+_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+_MODEL_CACHE = os.path.join(_CURRENT_DIR, 'model_cache_detectron')
 _MODEL_1 = (
     'maskrcnn_r101_fpn_3x',
     'https://duke.box.com/shared/static/wajctmp0twllhskpgekm539rsy7je1za.yaml',
