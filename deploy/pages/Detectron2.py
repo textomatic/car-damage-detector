@@ -103,7 +103,7 @@ if __name__ == '__main__':
     # Dropdown box to select a model
     model_choice = st.selectbox('Pick a model', [_MODEL_1[0], _MODEL_2[0]])
     # Slider to select an inference threshold
-    confidence_threshold = st.slider('Pick a confidence threshold', 0.0, 1.0, 0.1)
+    confidence_threshold = st.slider('Pick a confidence threshold', 0.0, 1.0, 0.7, 0.1)
     # Load a custom trained Detectron2 model
     detector = DetectronModel(model_choice, threshold=confidence_threshold)
     

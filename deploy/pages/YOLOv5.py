@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # Dropdown box to select a model
     model_choice = st.selectbox('Pick a model', [_MODEL_NAME])
     # Slider to select an inference threshold
-    confidence_threshold = st.slider('Pick a confidence threshold', 0.0, 1.0, 0.1)
+    confidence_threshold = st.slider('Pick a confidence threshold', 0.0, 1.0, 0.7, 0.1)
     # Load a custom trained YOLOv5 model
     detector = torch.hub.load('ultralytics/yolov5', 'custom', path=os.path.join(_MODEL_CACHE, _MODEL_NAME))
     detector.conf = confidence_threshold
@@ -63,7 +63,6 @@ if __name__ == '__main__':
             subprocess.run([f"{sys.executable}", f"{_REPO_CACHE}/segment/predict.py", "--weights", _MODEL_CACHE + "/" + _MODEL_NAME, "--conf", str(confidence_threshold), "--source", image_file.name, "--exist-ok"])
 
         # Display prediction on image
-        #pred_loc = _PARENT_DIR + '/yolo_preds/predictions'
         pred_loc = os.path.join(_REPO_CACHE + '/runs/predict-seg/exp', image_file.name)
         img_result = Image.open(pred_loc)
         st.image(img_result, caption='Processed Image')

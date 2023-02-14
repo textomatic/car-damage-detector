@@ -8,7 +8,7 @@ _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 if __name__ == '__main__':
     st.set_page_config(page_title='Car Damage Detector')
     st.title('Car Damage Detector')
-    st.subheader('This web app demonstrates the detection of damage(s) on the exterior of a car using object detection and instance segmentation deep learning models.')
+    st.subheader('This web app demonstrates the detection of damage on the exterior of a car using object detection and instance segmentation algorithms in deep learning models.')
     st.markdown("### Detectron2")
     st.write("Training was done on the Mask R-CNN ResNet-101 FPN 3x and Mask R-CNN ResNet-101 DC5 3x instance segmentation models available from the model zoo.")
     st.markdown("### YOLOv5")
