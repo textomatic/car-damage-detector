@@ -60,10 +60,10 @@ if __name__ == '__main__':
         # Generate prediction on image
         with st.spinner('Performing inference on image...'):
             # Execute detection script to get inference of bounding box and segmentation mask
-            subprocess.run([f"{sys.executable}", f"{_REPO_CACHE}/segment/predict.py", "--weights", _MODEL_CACHE + "/" + _MODEL_NAME, "--conf", str(confidence_threshold), "--source", image_file.name, "--project", "yolo_preds", "--name", "predictions", "--exist-ok"], cwd=_CURRENT_DIR)
+            subprocess.run([f"{sys.executable}", f"{_REPO_CACHE}/segment/predict.py", "--weights", _MODEL_CACHE + "/" + _MODEL_NAME, "--conf", str(confidence_threshold), "--source", image_file.name, "--exist-ok"])
 
         # Display prediction on image
         #pred_loc = _PARENT_DIR + '/yolo_preds/predictions'
-        pred_loc = os.path.join(_CURRENT_DIR, '/yolo_preds/predictions')
-        img_result = Image.open(os.path.join(pred_loc, image_file.name))
+        pred_loc = os.path.join(_REPO_CACHE + '/runs/predict-seg', image_file.name)
+        img_result = Image.open(pred_loc)
         st.image(img_result, caption='Processed Image')
