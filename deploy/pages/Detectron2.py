@@ -93,7 +93,7 @@ if __name__ == '__main__':
     # Download the models if they don't exist locally yet
     if not os.path.exists(_MODEL_CACHE) or len(os.listdir(_MODEL_CACHE)) != 4:
         with st.spinner('Model(s) not found locally. Downloading from remote...'):
-            os.makedirs(_MODEL_CACHE)
+            os.makedirs(_MODEL_CACHE, exist_ok=True)
             for model in [_MODEL_1, _MODEL_2]:
                 response_cfg = requests.get(model[1], allow_redirects=True)
                 open(os.path.join(_MODEL_CACHE, model[0] + '.yaml'), 'wb').write(response_cfg.content)
