@@ -1,6 +1,6 @@
-cv2
-numpy
-scikit-learn
-scikit-image
-pillow
-pickle
+cv2=="4.7.0"
+numpy=="1.24.1"
+scikit-learn=="1.2.0"
+scikit-image=="0.19.3"
+pillow=="9.4.0"
+pickle=="4.0"
