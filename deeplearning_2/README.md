@@ -15,7 +15,7 @@ conda create -n deeplearning2 python=3.8
 conda activate deeplearning2
 ```
 
-4. Insatll YOLOv5 model  
+4. Install YOLOv5 model  
 ```bash 
 git clone https://github.com/ultralytics/yolov5.git -b v7.0
 ```
