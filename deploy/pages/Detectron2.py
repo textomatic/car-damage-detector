@@ -91,7 +91,7 @@ if __name__ == '__main__':
     logger = setup_logger()
 
     # Download the models if they don't exist locally yet
-    if not os.path.exists(_MODEL_CACHE):
+    if not os.path.exists(_MODEL_CACHE) or not os.listdir(_MODEL_CACHE):
         with st.spinner('Model(s) not found locally. Downloading from remote...'):
             os.makedirs(_MODEL_CACHE)
             for model in [_MODEL_1, _MODEL_2]:
@@ -99,6 +99,7 @@ if __name__ == '__main__':
                 open(os.path.join(_MODEL_CACHE, model[0] + '.yaml'), 'wb').write(response_cfg.content)
                 response_weights = requests.get(model[2], allow_redirects=True)
                 open(os.path.join(_MODEL_CACHE, model[0] + '.pth'), 'wb').write(response_weights.content)
+                print(f'Downloaded {model[0]} successfully!')
 
     # Dropdown box to select a model
     model_choice = st.selectbox('Pick a model', [_MODEL_1[0], _MODEL_2[0]])
