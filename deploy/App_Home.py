@@ -1,9 +1,9 @@
 import streamlit as st
-import io
 import os
 import warnings
 warnings.filterwarnings('ignore')
 
+_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 if __name__ == '__main__':
     st.set_page_config(page_title='Car Damage Detector')
@@ -16,6 +16,6 @@ if __name__ == '__main__':
     st.markdown("### Types of Damage")
     st.write("Dent, Scratch, Crack, Shattered Glass, Broken Lamp, Flat Tire")
     st.markdown("### Examples")
-    st.image('images/example1.png', caption='Example of scratch detection')
-    st.image('images/example2.png', caption='Example of shattered glass detection')
-    st.image('images/example3.jpg', caption='Example of scratch detection')
+    st.image(_CURRENT_DIR + '/images/example1.png', caption='Example of scratch detection')
+    st.image(_CURRENT_DIR + '/images/example2.png', caption='Example of shattered glass detection')
+    st.image(_CURRENT_DIR + '/images/example3.jpg', caption='Example of scratch detection')
