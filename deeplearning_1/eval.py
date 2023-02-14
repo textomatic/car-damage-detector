@@ -5,14 +5,23 @@ import random
 import matplotlib.pyplot as plt
 import torch
 import detectron2
-from detectron2 import model_zoo
-from detectron2.config import get_cfg, CfgNode
+from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 from detectron2.data import MetadataCatalog, DatasetCatalog, build_detection_test_loader
 from detectron2.data.datasets import register_coco_instances
 from detectron2.utils.visualizer import Visualizer, ColorMode
 from detectron2.utils.logger import setup_logger
+
+
+# Define constants
+_TORCH_VERSION = ".".join(torch.__version__.split(".")[:2])
+_CUDA_VERSION = torch.__version__.split("+")[-1]
+_DETECTRON_VERSION = detectron2.__version__
+_IMAGE_DATA_DIR = '../data'
+_IMAGE_ARCHIVE_NAME = 'images2'
+_TEST_DATASET_NAME = 'cardamage_test'
+_DEFAULT_MODEL_NAME = 'model_final'
 
 
 def register_image():
@@ -26,18 +35,18 @@ def register_image():
         None
     '''
     # Define path to image files
-    data_zip = os.path.join(IMAGE_DATA_DIR, IMAGE_ARCHIVE_NAME + '.zip')
-    image_dir = os.path.join(IMAGE_DATA_DIR, IMAGE_ARCHIVE_NAME)
+    data_zip = os.path.join(_IMAGE_DATA_DIR, _IMAGE_ARCHIVE_NAME + '.zip')
+    image_dir = os.path.join(_IMAGE_DATA_DIR, _IMAGE_ARCHIVE_NAME)
     test_dir = os.path.join(image_dir, 'test')
     annot_dir = os.path.join(image_dir, 'annotations')
 
     # Extract images if still in archive
     if not os.path.exists(image_dir):
         with ZipFile(data_zip, 'r') as z_object:
-            z_object.extractall(IMAGE_DATA_DIR)
+            z_object.extractall(_IMAGE_DATA_DIR)
     
     # Register test set with Detectron2
-    register_coco_instances(TEST_DATASET_NAME, {}, os.path.join(annot_dir, 'test.json'), test_dir)
+    register_coco_instances(_TEST_DATASET_NAME, {}, os.path.join(annot_dir, 'test.json'), test_dir)
 
 
 def get_predictor(model_dir, threshold):
@@ -52,11 +61,11 @@ def get_predictor(model_dir, threshold):
         None
     '''
     cfg = get_cfg() # Obtain default configurations
-    cfg_yaml_loadpath = os.path.join(model_dir, DEFAULT_MODEL_NAME + '.yaml')
+    cfg_yaml_loadpath = os.path.join(model_dir, _DEFAULT_MODEL_NAME + '.yaml')
     cfg.merge_from_file(cfg_yaml_loadpath)
     logger.info(f"Model configuration YAML file has been loaded from {cfg_yaml_loadpath}.")
-    cfg.MODEL.WEIGHTS = os.path.join(model_dir, DEFAULT_MODEL_NAME + '.pth') # Path to the trained model weights
-    logger.info(f"Model weights have been loaded from {os.path.join(model_dir, DEFAULT_MODEL_NAME + '.pth')}.")
+    cfg.MODEL.WEIGHTS = os.path.join(model_dir, _DEFAULT_MODEL_NAME + '.pth') # Path to the trained model weights
+    logger.info(f"Model weights have been loaded from {os.path.join(model_dir, _DEFAULT_MODEL_NAME + '.pth')}.")
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = threshold # Set a custom testing threshold
     predictor = DefaultPredictor(cfg) # Instantiate predictor object
     return predictor, cfg
@@ -74,8 +83,8 @@ def eval_model(model_dir, predictor, cfg):
     Returns:
         None
     '''
-    evaluator = COCOEvaluator(TEST_DATASET_NAME, output_dir=model_dir) # Instantiate evaluator object
-    test_loader = build_detection_test_loader(cfg, TEST_DATASET_NAME) # Create test loader with custom test dataset
+    evaluator = COCOEvaluator(_TEST_DATASET_NAME, output_dir=model_dir) # Instantiate evaluator object
+    test_loader = build_detection_test_loader(cfg, _TEST_DATASET_NAME) # Create test loader with custom test dataset
     logger.info(inference_on_dataset(predictor.model, test_loader, evaluator)) # Print evaluation results
 
 
@@ -128,8 +137,8 @@ def main(args):
     register_image()
 
     # Obtain test dataset and metadataset by name
-    test_data = DatasetCatalog.get(TEST_DATASET_NAME)
-    test_metadata = MetadataCatalog.get(TEST_DATASET_NAME)
+    test_data = DatasetCatalog.get(_TEST_DATASET_NAME)
+    test_metadata = MetadataCatalog.get(_TEST_DATASET_NAME)
 
     # Obtain predictor
     predictor, cfg = get_predictor(args.model_dir, args.threshold)
@@ -146,18 +155,10 @@ def main(args):
 
 
 if __name__ == '__main__':
-    # Define constants
-    TORCH_VERSION = ".".join(torch.__version__.split(".")[:2])
-    CUDA_VERSION = torch.__version__.split("+")[-1]
-    DETECTRON_VERSION = detectron2.__version__
-    IMAGE_DATA_DIR = '../data'
-    IMAGE_ARCHIVE_NAME = 'images2'
-    TEST_DATASET_NAME = 'cardamage_test'
-    DEFAULT_MODEL_NAME = 'model_final'
 
     # Display PyTorch and Detectron2 versions as sanity checks
-    print("torch: ", TORCH_VERSION, "; cuda: ", CUDA_VERSION)
-    print("detectron2: ", DETECTRON_VERSION)
+    print("torch: ", _TORCH_VERSION, "; cuda: ", _CUDA_VERSION)
+    print("detectron2: ", _DETECTRON_VERSION)
     logger = setup_logger()
 
     # Parse command line arguments

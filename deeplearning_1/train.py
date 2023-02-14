@@ -16,6 +16,20 @@ from detectron2.utils.logger import setup_logger
 from customtrainer import CustomTrainer
 
 
+# Define constants
+_TORCH_VERSION = ".".join(torch.__version__.split(".")[:2])
+_CUDA_VERSION = torch.__version__.split("+")[-1]
+_DETECTRON_VERSION = detectron2.__version__
+_IMAGE_DATA_DIR = '../data'
+_IMAGE_ARCHIVE_NAME = 'images2'
+_TRAIN_DATASET_NAME = 'cardamage_train'
+_TOTAL_CLASSES = 6
+_DEFAULT_MODEL_NAME = 'model_final'
+_NUM_WORKERS = 2
+_MINI_BATCH_SIZE = 4
+_ROIHEAD_BATCH_SIZE = 512
+
+
 def register_image():
     '''
     Decompresses dataset archive if necessary, defines paths to the training image dataset, and registers it with Detectron2.
@@ -27,18 +41,18 @@ def register_image():
         None
     '''
     # Define path to image files
-    data_zip = os.path.join(IMAGE_DATA_DIR, IMAGE_ARCHIVE_NAME + '.zip')
-    image_dir = os.path.join(IMAGE_DATA_DIR, IMAGE_ARCHIVE_NAME)
+    data_zip = os.path.join(_IMAGE_DATA_DIR, _IMAGE_ARCHIVE_NAME + '.zip')
+    image_dir = os.path.join(_IMAGE_DATA_DIR, _IMAGE_ARCHIVE_NAME)
     train_dir = os.path.join(image_dir, 'train')
     annot_dir = os.path.join(image_dir, 'annotations')
 
     # Extract images if still in archive
     if not os.path.exists(image_dir):
         with ZipFile(data_zip, 'r') as z_object:
-            z_object.extractall(IMAGE_DATA_DIR)
+            z_object.extractall(_IMAGE_DATA_DIR)
     
     # Register train and test sets with Detectron2
-    register_coco_instances(TRAIN_DATASET_NAME, {}, os.path.join(annot_dir, 'train.json'), train_dir)
+    register_coco_instances(_TRAIN_DATASET_NAME, {}, os.path.join(annot_dir, 'train.json'), train_dir)
 
 
 def visualize_image(output_dir, train_data, train_metadata, amount):
@@ -107,22 +121,22 @@ def train(pretrained_model_name, train_data, output_dir, epochs=10, learning_rat
     cfg = get_cfg() # Get default configuration
     cfg.OUTPUT_DIR = output_dir # Set output directory for this training session
     cfg.merge_from_file(model_zoo.get_config_file(pretrained_model_config)) # Merge existing configs from pretrained model
-    cfg.DATASETS.TRAIN = (TRAIN_DATASET_NAME,) # Define training dataset
+    cfg.DATASETS.TRAIN = (_TRAIN_DATASET_NAME,) # Define training dataset
     cfg.DATASETS.TEST = () # Leave test dataset empty because evaluation is carried out separately
-    cfg.DATALOADER.NUM_WORKERS = NUM_WORKERS # Number of workers
+    cfg.DATALOADER.NUM_WORKERS = _NUM_WORKERS # Number of workers
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(pretrained_model_config)  # Obtain weights from pretrained model
-    cfg.SOLVER.IMS_PER_BATCH = MINI_BATCH_SIZE  # Size of mini-batch
+    cfg.SOLVER.IMS_PER_BATCH = _MINI_BATCH_SIZE  # Size of mini-batch
     train_size = len(train_data) # Size of training data
     iter_per_epoch = int(train_size / cfg.SOLVER.IMS_PER_BATCH) # Calculates how many mini-batches in one epoch
     cfg.SOLVER.MAX_ITER = epochs * iter_per_epoch # Defines the "total iterations" needed for training
     cfg.SOLVER.BASE_LR = learning_rate  # Learning rate
     cfg.SOLVER.STEPS = [] # Reduces LR by a gamma factor of 0.1 from specifc steps onwards
     cfg.MODEL.MASK_ON = True # Enable instance segmentation
-    cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = ROIHEAD_BATCH_SIZE   # Batch size of the RoIHead
-    cfg.MODEL.ROI_HEADS.NUM_CLASSES = TOTAL_CLASSES  # Number of classes of car damage
+    cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = _ROIHEAD_BATCH_SIZE   # Batch size of the RoIHead
+    cfg.MODEL.ROI_HEADS.NUM_CLASSES = _TOTAL_CLASSES  # Number of classes of car damage
     # Save configurations to a YAML file for ease of evaluation later on
     cfg_yaml = cfg.dump()
-    cfg_yaml_savepath = os.path.join(output_dir, DEFAULT_MODEL_NAME + '.yaml')
+    cfg_yaml_savepath = os.path.join(output_dir, _DEFAULT_MODEL_NAME + '.yaml')
     with open(cfg_yaml_savepath, 'w') as file:
         file.write(cfg_yaml)
     logger.info(f"Model configuration YAML file has been saved to {cfg_yaml_savepath}.")
@@ -146,8 +160,8 @@ def main(args):
     register_image()
 
     # Obtain train dataset and metadataset by name
-    train_data = DatasetCatalog.get(TRAIN_DATASET_NAME)
-    train_metadata = MetadataCatalog.get(TRAIN_DATASET_NAME)
+    train_data = DatasetCatalog.get(_TRAIN_DATASET_NAME)
+    train_metadata = MetadataCatalog.get(_TRAIN_DATASET_NAME)
 
     # Create output directory
     os.makedirs(args.output_dir, exist_ok=False)
@@ -167,22 +181,10 @@ def main(args):
 
 
 if __name__ == '__main__':
-    # Define constants
-    TORCH_VERSION = ".".join(torch.__version__.split(".")[:2])
-    CUDA_VERSION = torch.__version__.split("+")[-1]
-    DETECTRON_VERSION = detectron2.__version__
-    IMAGE_DATA_DIR = '../data'
-    IMAGE_ARCHIVE_NAME = 'images2'
-    TRAIN_DATASET_NAME = 'cardamage_train'
-    TOTAL_CLASSES = 6
-    DEFAULT_MODEL_NAME = 'model_final'
-    NUM_WORKERS = 2
-    MINI_BATCH_SIZE = 4
-    ROIHEAD_BATCH_SIZE = 512
 
     # Display PyTorch and Detectron2 versions as sanity checks
-    print("torch: ", TORCH_VERSION, "; cuda: ", CUDA_VERSION)
-    print("detectron2: ", DETECTRON_VERSION)
+    print("torch: ", _TORCH_VERSION, "; cuda: ", _CUDA_VERSION)
+    print("detectron2: ", _DETECTRON_VERSION)
     logger = setup_logger()
 
     # Parse command line arguments
