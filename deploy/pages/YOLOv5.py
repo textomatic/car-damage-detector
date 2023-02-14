@@ -11,6 +11,7 @@ import sys
 _TORCH_VERSION = ".".join(torch.__version__.split(".")[:2])
 _CUDA_VERSION = torch.__version__.split("+")[-1]
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+_PARENT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 _REPO_CACHE = os.path.join(_CURRENT_DIR, 'repo_cache_yolo/yolov5')
 _MODEL_CACHE = os.path.join(_CURRENT_DIR, 'model_cache_yolo')
 _MODEL_NAME = 'yolov5s-seg-best.pt'
@@ -62,6 +63,6 @@ if __name__ == '__main__':
             subprocess.run([f"{sys.executable}", f"{_REPO_CACHE}/segment/predict.py", "--weights", _MODEL_CACHE + "/" + _MODEL_NAME, "--conf", str(confidence_threshold), "--source", image_file.name, "--project", "yolo_preds","--name", "predictions", "--exist-ok"])
 
         # Display prediction on image
-        pred_loc = _REPO_CACHE + '/yolo_preds/predictions'
+        pred_loc = _PARENT_DIR + '/yolo_preds/predictions'
         img_result = Image.open(os.path.join(pred_loc, image_file.name))
         st.image(img_result, caption='Processed Image')
