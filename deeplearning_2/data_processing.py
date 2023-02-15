@@ -2,7 +2,7 @@
 import os
 import json
 from zipfile import ZipFile
-def Generate_DirctoryStructure():
+def Generate_DirctoryStructure():# Function to generate the directory structure for the YOLOv5 dataset
     root_dir = './data/CarSeg_Data'
 
     # Create the root directory
@@ -40,7 +40,7 @@ def Generate_DirctoryStructure():
         os.makedirs(val_images_dir)
 
 
-def data_rename(dirs_path,yolo_directory):
+def data_rename(dirs_path,yolo_directory):# # Function to rename the image files and move them to the appropriate directories
     for path in dirs_path:
         files = os.listdir(path)
         for file in files :
@@ -57,7 +57,7 @@ def data_rename(dirs_path,yolo_directory):
                 os.rename(old_path, new_path)
 
 
-def read_json(json_path,data_type,label_path):
+def read_json(json_path,data_type,label_path):# Function to read the JSON files containing the label information and convert them to the YOLOv5 format
     file_path = os.path.join(label_path,data_type)
     with open(json_path, 'r') as f:
         data = json.load(f)
@@ -89,7 +89,7 @@ def read_json(json_path,data_type,label_path):
                                     result.append(new_list[j]/file['width'])
                             result.insert(0,i['category_id'])
                         f.write(' '.join(map(str, result)) + '\n')
-def Generate_YOLOv5dataset():
+def Generate_YOLOv5dataset():# create yolo dataset 
     IMAGE_ARCHIVE_NAME = 'images'
     YOLOv5_Dataset = 'CarSeg_data'
     data_dir = './data'
